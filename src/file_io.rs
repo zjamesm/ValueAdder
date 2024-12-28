@@ -3,12 +3,19 @@ use std::{fs::File, io::BufReader, io, path::Path};
 
 const STATE_FILENAME: &'static str = "value_adder_info.json";
 
+// following for the LifetimeValue struct is largely from:
+// https://stackoverflow.com/questions/72755833/saving-changed-variables-between-runtime-rust
+// adapted for my use case
+
 #[derive(Serialize, Deserialize, Debug)]
-pub struct PersistentState {
-    counter: f64,
+pub struct LifetimeValue {
+    value: f64,
 }
 
-impl PersistentState {
+// as mentioned in the above se link this is a lossy format, but that does not really matter
+// though later implementations may utilize a direct conversion to Vec(u8) which should be lossless?
+
+impl LifetimeValue {
     pub fn load() -> Self {
         let path = Path::new(STATE_FILENAME);
 
@@ -26,11 +33,16 @@ impl PersistentState {
     }
 }
 
-impl Default for PersistentState {
+impl Default for LifetimeValue {
     fn default() -> Self {
-        Self { counter: 0 as f64}
+        Self { value: 0 as f64}
     }
 }
+
+
+// surely I could do this better, but I dont know how
+// in query and parse as methods in particular feel bad,
+// but suit the use case so idk
 
 pub struct UserQuery {
     pub query_text: String,
@@ -47,6 +59,12 @@ impl UserQuery {
             .expect("Value input failed");
 
         user_input
+    }
+
+    fn requery(&self, query_message: &str) -> String {
+        println!("{}", query_message);
+
+        self.query()
     }
 
     pub fn query_and_parse_as_f64(&self) -> f64 {
