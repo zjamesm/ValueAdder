@@ -7,7 +7,7 @@ const STATE_FILENAME: &'static str = "value_adder_info.json";
 // https://stackoverflow.com/questions/72755833/saving-changed-variables-between-runtime-rust
 // adapted for my use case
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, PartialEq)]
 pub struct LifetimeValue {
     value: f64,
 }
@@ -41,7 +41,7 @@ impl Default for LifetimeValue {
 
 
 // surely I could do this better, but I dont know how
-// in query and parse as methods in particular feel bad,
+// query and parse as methods in particular feel bad,
 // but suit the use case so idk
 
 pub struct UserQuery {
@@ -61,18 +61,21 @@ impl UserQuery {
         user_input
     }
 
-    fn requery(&self, query_message: &str) -> String {
-        println!("{}", query_message);
+    // fn requery(&self, requery_message: &str) -> String {
+    //     println!("{}", requery_message);
 
-        self.query()
-    }
+    //     self.query()
+    // }
 
     pub fn query_and_parse_as_f64(&self) -> f64 {
         let parse_value = self.query();
 
         match parse_value.trim().parse() {
             Ok(num) => num,
-            Err(_e) => self.query_and_parse_as_f64()
+            Err(_e) => {
+                print!("Invalid entry, please submit a valid decimal value");
+                self.query_and_parse_as_f64()
+            }
         }
     }
 
@@ -81,7 +84,10 @@ impl UserQuery {
 
         match parse_value.trim().parse() {
             Ok(num) => num,
-            Err(_e) => self.query_and_parse_as_u32()
+            Err(_e) => {
+                print!("Invalid entry, please submit an integer value");
+                self.query_and_parse_as_u32()
+            }
         }
     }
 }
