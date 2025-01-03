@@ -70,24 +70,28 @@ impl UserQuery {
     pub fn query_and_parse_as_f64(&self) -> f64 {
         let parse_value = self.query();
 
-        match parse_value.trim().parse() {
+        let parsed_value: f64 = match parse_value.trim().parse() {
             Ok(num) => num,
             Err(_e) => {
                 print!("Invalid entry, please submit a valid decimal value");
                 self.query_and_parse_as_f64()
             }
-        }
+        };
+
+        parsed_value
     }
 
     pub fn query_and_parse_as_u32(&self) -> u32 {
         let parse_value = self.query();
 
-        match parse_value.trim().parse() {
+        let parsed_value: u32 = match parse_value.trim().parse() {
             Ok(num) => num,
             Err(_e) => {
-                print!("Invalid entry, please submit an integer value");
+                print!("Invalid entry, please submit a valid decimal value");
                 self.query_and_parse_as_u32()
             }
-        }
+        };
+
+        parsed_value
     }
 }

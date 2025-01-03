@@ -1,7 +1,7 @@
 use file_io::UserQuery;
 
 pub mod file_io;
-mod runner;
+pub mod runner;
 
 const INTERVAL_IN_SECONDS: u32 = 10;
 const HOUR_IN_SECONDS: u32 = 3600;
@@ -18,13 +18,40 @@ fn main() {
         query_text: String::from("Duration in minutes:")
     };
 
-    let member_count: f64 = first_question.query_and_parse_as_f64();
-    let average_hourly_rate: f64 = second_question.query_and_parse_as_f64();
-    let duration_in_minutes: u32 = third_question.query_and_parse_as_u32();
+    let members: u32 = first_question.query_and_parse_as_u32();
+    let duration_in_minutes: u32 = second_question.query_and_parse_as_u32();
+    let average_hourly_rate: f64 = third_question.query_and_parse_as_f64();
 
-    let duration_in_intervals: u32 = &duration_in_minutes * &MINUTE_IN_SECONDS / &INTERVAL_IN_SECONDS;
+    let config = MeetingConfig {
+        members,
+        duration_in_minutes,
+        average_hourly_rate
+    };
 
-    let hourly_cost: f64 = average_hourly_rate * member_count;
+
+}
+
+pub struct MeetingConfig {
+    members: u32,
+    duration_in_minutes: u32,
+    average_hourly_rate: f64
+}
+
+impl MeetingConfig {
+    pub fn build(
+        members: u32,
+        duration_in_minutes: u32,
+        average_hourly_rate: f64
+    ) -> 
+    Result<MeetingConfig, &'static str> {
+        if members <= 1 {return Err("Members must be greater than 1");}
+        if duration_in_minutes <= 0 {return Err("Duration must be postive");}
+        if average_hourly_rate <= 0.0 {return Err("Hourly rate must be positive");}
+
+        let config = MeetingConfig {members, duration_in_minutes, average_hourly_rate};
+
+        Ok(config)
+    }
 
     
 }
