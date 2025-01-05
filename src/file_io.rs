@@ -52,7 +52,7 @@ impl UserQuery {
     fn query(&self) -> String {
         let mut user_input: String = String::new();
 
-        print!("{}", self.query_text);
+        println!("{}", self.query_text);
 
         io::stdin() 
             .read_line(&mut user_input)
@@ -73,7 +73,7 @@ impl UserQuery {
         let parsed_value: f64 = match parse_value.trim().parse() {
             Ok(num) => num,
             Err(_e) => {
-                print!("Invalid entry, please submit a valid decimal value");
+                println!("Invalid entry, please submit a valid decimal value");
                 self.query_and_parse_as_f64()
             }
         };
@@ -87,7 +87,7 @@ impl UserQuery {
         let parsed_value: u32 = match parse_value.trim().parse() {
             Ok(num) => num,
             Err(_e) => {
-                print!("Invalid entry, please submit a valid decimal value");
+                println!("Invalid entry, please submit a valid decimal value");
                 self.query_and_parse_as_u32()
             }
         };
