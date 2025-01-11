@@ -24,7 +24,7 @@ fn main() {
         average_hourly_rate
     };
     
-    runner::run(config);
+    runner::run_value_adder(config);
 
     
 }
